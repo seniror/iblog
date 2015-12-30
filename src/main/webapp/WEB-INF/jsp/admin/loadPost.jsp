@@ -10,6 +10,12 @@
 <link rel="stylesheet" href="${contextPath }/js/bootstrap-3.3.6-dist/css/bootstrap.min.css">
 <script src="${contextPath }/js/jquery-1.11.3.min.js"></script>
 <script src="${contextPath }/js/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+<script src="${contextPath }/js/ace-min/ace.js"></script>
+<script>
+window.onload = function() {
+    var editor = ace.edit("ace-editor");
+};
+</script>
 </head>
 
 <body>
@@ -17,6 +23,9 @@
 <form action="/admin/updatePost" method="post">
 Title:<input type="text" name="title" value="${post.title }">
 Content:<input type="text" name="content" value="${post.content }">
+<div id="ace-editor">${post.content }
+</div>
+
 <input type="hidden" name="postId" value="${post.id}"/>
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 <input type="submit">
