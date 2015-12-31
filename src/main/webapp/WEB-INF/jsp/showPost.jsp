@@ -13,8 +13,16 @@
 </head>
 
 <body>
+
 <div class="container">
+<div id="header">
+<a href="/">
+<h2>Seniror's Blog</h2>
+</a>
+</div>
+<pre>
 ${post.content}
+</pre>
 </div>
 
 </body>

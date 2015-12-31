@@ -3,32 +3,54 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>  
 <html lang="en">
 <head>
-<title>Update post</title>
 <c:set value="${pageContext.servletContext.contextPath }" var="contextPath"></c:set>
+<title>New Post</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="${contextPath }/js/bootstrap-3.3.6-dist/css/bootstrap.min.css">
 <script src="${contextPath }/js/jquery-1.11.3.min.js"></script>
 <script src="${contextPath }/js/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
-<script src="${contextPath }/js/ace-min/ace.js"></script>
+<style>
+      #editorContent { 
+		height: 430px;
+		width: 100%;
+          }
+  </style>
+<script src="${contextPath }/js/src-noconflict/ace.js"></script>
+<script src="${contextPath }/js/src-noconflict/mode-markdown.js"></script>
+<script src="${contextPath }/js/src-noconflict/theme-github.js"></script>
 <script>
 window.onload = function() {
-    var editor = ace.edit("ace-editor");
+	var editor = ace.edit("editorContent");
+	var textarea = $('textarea[name="editorContent"]').hide();
+	editor.getSession().setValue(textarea.val());
+	editor.getSession().on('change', function(){
+	  textarea.val(editor.getSession().getValue());
+	});
 };
-</script>
+</script>    
 </head>
 
 <body>
 <div class="container">
-<form action="/admin/updatePost" method="post">
-Title:<input type="text" name="title" value="${post.title }">
-Content:<input type="text" name="content" value="${post.content }">
-<div id="ace-editor">${post.content }
+<div id="header">
+<a href="/">
+<h2>Seniror's Blog</h2>
+</a>
 </div>
+
+<form action="/admin/updatePost" method="post">
+<p>Title:</p>
+<input type="text" name="title" class="input-md" value="${post.title }" style="margin-bottom:5px;width:100%"/>
+<textarea name="editorContent">${post.content }</textarea>
+<div id="editorContent"></div>
 
 <input type="hidden" name="postId" value="${post.id}"/>
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-<input type="submit">
+<br/>
+<input type="submit" class="btn btn-primary btn-block" style="width:100%;margin-top:5px">	
+<br/>
+<a href="/admin/index" role="button" class="btn btn-default btn-block">Cancel</a>
 </form>
 </div>
 </body>

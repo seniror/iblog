@@ -11,37 +11,44 @@
 <script src="${contextPath }/js/jquery-1.11.3.min.js"></script>
 <script src="${contextPath }/js/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 <style>
-      #ace-editor { 
+      #editorContent { 
 		height: 430px;
-		width: 80%;
+		width: 100%;
           }
   </style>
+<!-- ACE web browser editor -->  
 <script src="${contextPath }/js/src-noconflict/ace.js"></script>
 <script src="${contextPath }/js/src-noconflict/mode-markdown.js"></script>
 <script src="${contextPath }/js/src-noconflict/theme-github.js"></script>
 <script>
 window.onload = function() {
-    editor = ace.edit("ace-editor");
-    editor.setTheme("ace/theme/github");
-    editor.getSession().setMode("ace/mode/markdown");
-};
-function submit_form(){
-    $("#hidden-editor").val(editor.getValue());
-    return true;
+	var editor = ace.edit("editorContent");
+	var textarea = $('textarea[name="editorContent"]').hide();
+	editor.getSession().setValue(textarea.val());
+	editor.getSession().on('change', function(){
+	  textarea.val(editor.getSession().getValue());
+	});
 };
 </script>    
 </head>
 
 <body>
+
 <div class="container">
-<form action="/admin/createPost" method="post" id="form1" onsubmit="submit_form()">
-Title:<input type="text" name="title">
-<div id="ace-editor">${post.content }
+<div id="header">
+<a href="/">
+<h2>Seniror's Blog</h2>
+</a>
 </div>
-<input type="hidden" name="content" id="hidden-editor"/>
+
+<form action="/admin/createPost" method="post" id="form1">
+<p>Title:</p>
+<input type="text" name="title" class="input-md" style="margin-bottom:5px;width:100%"/>
+<textarea name="editorContent"></textarea>
+<div id="editorContent"></div>
 
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-<input type="submit">
+<input type="submit" class="btn btn-primary btn-block" style="width:100%;margin-top:5px"> 
 </form>
 </div>
 </body>

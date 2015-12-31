@@ -26,6 +26,8 @@ public class AdminController {
 	
 	@RequestMapping("/index")
 	public String index(Map<String, Object> model) {
+		String name = getLoginUsername();
+		model.put("loginUsername", name);
 		List<Post> posts = postRepository.findAll();
 		model.put("posts", posts);
 	    return "admin/index";
@@ -37,13 +39,18 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/createPost")
-	public String createPost(String title, String content, Map<String, Object> model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    String name = auth.getName(); //get logged in username
+	public String createPost(String title, String editorContent, Map<String, Object> model) {
+		String name = getLoginUsername();
 	    User user = userRepository.findUserByLoginName(name);
-	    Post post = postRepository.save(new Post(title, content, user));
+	    Post post = postRepository.save(new Post(title, editorContent, user));
 	    model.put("post", post);
 	    return "redirect:/admin/index";
+	}
+
+	private String getLoginUsername() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    String name = auth.getName(); //get logged in username
+		return name;
 	}
 	
 	@RequestMapping("/loadPost")
@@ -53,13 +60,20 @@ public class AdminController {
 	}	
 	
 	@RequestMapping("/updatePost")
-	public String updatePost(String title, String content, Integer postId, Map<String, Object> model) {
+	public String updatePost(String title, String editorContent, Integer postId, Map<String, Object> model) {
 		
 	    Post post = postRepository.findOne(postId);
-	    post.setContent(content);
+	    post.setContent(editorContent);
 	    post.setTitle(title);
 	    postRepository.save(post);
 	    model.put("post", post);
+	    return "redirect:/admin/index";
+	}	
+	
+	@RequestMapping("/deletePost")
+	public String deletePost(Integer id) {
+		
+	    postRepository.delete(id);
 	    return "redirect:/admin/index";
 	}	
 }
