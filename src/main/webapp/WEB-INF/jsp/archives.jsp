@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html lang="en">
 <head>
@@ -16,32 +17,35 @@
 </head>
 
 <body>
-<div class="container">
-<div>
-<h1>Welcome to Seniror's Blog</h1>
-
-<p>Hi there, this is Yang Sheng from Shanghai, China. I built this site from scratch myself, I want to share something starting from here.
-</p>
-
+<div class="container" >
+<div id="header">
+<a href="/">
+<h2>Seniror's Blog</h2>
+</a>
 </div>
-<h2>Latest Posts</h2>
-<c:forEach var="post" items="${posts}">
-	<c:url value="/post/findPostById" var="postUrl">
-	   <c:param name="id" value="${post.id}"/>
-	</c:url>
-		<div>
-	<a href="<c:out value="${postUrl}" />" class="thumbnail">
-	<h2>${post.title}</h2>
-	<span><c:out value="${post.createdTime }"/></span>
-	</a>
-	</div>
+<h2>All Posts</h2>
+<c:forEach var="oneYearPosts" items="${postsGroupByKey}">
+<h1>${oneYearPosts.key}</h1>
+<hr/>
+		<c:forEach var="post" items="${oneYearPosts.value}">
+			<c:url value="/post/findPostById" var="postUrl">
+			   <c:param name="id" value="${post.id}"/>
+			</c:url>
+				<div>
+				<a href="<c:out value="${postUrl}" />">
+				<h4>${post.title}</h4>
+				<small><fmt:formatDate pattern="yyyy-MM-dd" value="${post.updatedTime}" /></small>	                         
+
+				</a>
+			</div>
+		</c:forEach>
 </c:forEach>
-<div id="archives" class="text-center">
-<a href="/archives" role="button" class="btn btn-default">More articles</a>
-</div>
+
+
+
 <br/>
 <div id="footer" class="text-center">
-&copy; 2016 Seniror (Yang Sheng)
+&copy; Seniror (Yang Sheng)
 </div>
 <br/>
 </div>

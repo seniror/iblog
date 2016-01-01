@@ -26,27 +26,43 @@ function deletePost(postId) {
 
 <body>
 <div class="container">
-<div id="header">
-<a href="/">
-<h2>Seniror's Blog</h2>
-</a>
-</div>
-
-Welcome back, ${loginUsername } <a href="/logout">Log out</a>
-<h3><a href="/admin/newPost">New Post</a></h3>
-<h2 class="text-center">All Posts</h2>
-<c:forEach var="post" items="${posts}">
-	<c:url value="/admin/loadPost" var="postUrl">
-	   <c:param name="id" value="${post.id}"/>
-	</c:url>
-	<button type="button" class="btn btn-danger" onclick="deletePost(this.value)" value="${post.id }">Delete Post</button>
-	<div>
-	<a href="${postUrl}" class="thumbnail">
-	<h2>${post.title}</h2>
-	<span>${post.updatedTime }</span>
+	<div id="header">
+	<a href="/">
+	<h2>Seniror's Blog</h2>
 	</a>
 	</div>
-</c:forEach>
+	
+	Welcome back, ${loginUsername } <a href="/logout">Log out</a>
+	<h3><a href="/admin/newPost">New Post</a></h3>
+	<h2 class="text-center">All Posts (Page ${paginationPosts.number + 1 } out of ${paginationPosts.totalPages })</h2>
+	
+	<c:forEach var="post" items="${paginationPosts.content}">
+		<c:url value="/admin/loadPost" var="postUrl">
+		   <c:param name="id" value="${post.id}"/>
+		</c:url>
+		<button type="button" class="btn btn-danger" onclick="deletePost(this.value)" value="${post.id }">Delete Post</button>
+		<div>
+		<a href="${postUrl}" class="thumbnail">
+		<h2>${post.title}</h2>
+		<span>${post.updatedTime }</span>
+		</a>
+		</div>
+	</c:forEach>
+	<div class="text-right">
+	<ul class="pagination">
+		<c:forEach var="i" begin="0" end="${paginationPosts.totalPages - 1 }" step="1">
+			<c:choose>
+				<c:when test="${i == paginationPosts.number}">
+					<li class="active"><a href="/admin/index?pageIndex=${i }">${i + 1 }</a></li>			
+				</c:when>
+				<c:otherwise>
+					<li><a href="/admin/index?pageIndex=${i }">${i + 1 }</a></li>
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+	</ul>
+	</div>
 </div>
+
 </body>
 </html>

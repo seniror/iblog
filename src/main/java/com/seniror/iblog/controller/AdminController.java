@@ -1,9 +1,11 @@
 package com.seniror.iblog.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import com.seniror.iblog.dao.PostRepository;
 import com.seniror.iblog.dao.UserRepository;
 import com.seniror.iblog.domain.Post;
 import com.seniror.iblog.domain.User;
+import com.seniror.util.MarkdownService;
 
 @Controller
 @RequestMapping("/admin")
@@ -24,12 +27,24 @@ public class AdminController {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private MarkdownService markdownService;
+	
+	private static final int DEFAULT_PAGE_INDEX = 0;
+	private static final int PAGE_SIZE = 5;
+	
 	@RequestMapping("/index")
-	public String index(Map<String, Object> model) {
+	public String index(Integer pageIndex, Map<String, Object> model) {
 		String name = getLoginUsername();
 		model.put("loginUsername", name);
-		List<Post> posts = postRepository.findAll();
-		model.put("posts", posts);
+		
+		if(pageIndex == null) {
+			pageIndex = DEFAULT_PAGE_INDEX;
+		}
+		
+		PageRequest pageRequest = new PageRequest(pageIndex, PAGE_SIZE, Sort.Direction.DESC, "updatedTime");
+		Page<Post> paginationPosts = postRepository.findAll(pageRequest);
+		model.put("paginationPosts", paginationPosts);
 	    return "admin/index";
 	}	
 	
@@ -39,17 +54,18 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/createPost")
-	public String createPost(String title, String editorContent, Map<String, Object> model) {
+	public String createPost(String title, String markdownSource, Map<String, Object> model) {
 		String name = getLoginUsername();
 	    User user = userRepository.findUserByLoginName(name);
-	    Post post = postRepository.save(new Post(title, editorContent, user));
+	    String parsedHtmlContent = markdownService.toHtml(markdownSource);
+	    Post post = postRepository.save(new Post(title, markdownSource, parsedHtmlContent, user));
 	    model.put("post", post);
 	    return "redirect:/admin/index";
 	}
 
 	private String getLoginUsername() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    String name = auth.getName(); //get logged in username
+	    String name = auth.getName(); //get login username
 		return name;
 	}
 	
@@ -63,7 +79,7 @@ public class AdminController {
 	public String updatePost(String title, String editorContent, Integer postId, Map<String, Object> model) {
 		
 	    Post post = postRepository.findOne(postId);
-	    post.setContent(editorContent);
+	    post.setMarkdownSource(editorContent);
 	    post.setTitle(title);
 	    postRepository.save(post);
 	    model.put("post", post);

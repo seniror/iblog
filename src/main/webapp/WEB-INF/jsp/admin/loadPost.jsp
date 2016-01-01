@@ -11,7 +11,7 @@
 <script src="${contextPath }/js/jquery-1.11.3.min.js"></script>
 <script src="${contextPath }/js/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 <style>
-      #editorContent { 
+      #markdownSource { 
 		height: 430px;
 		width: 100%;
           }
@@ -21,8 +21,8 @@
 <script src="${contextPath }/js/src-noconflict/theme-github.js"></script>
 <script>
 window.onload = function() {
-	var editor = ace.edit("editorContent");
-	var textarea = $('textarea[name="editorContent"]').hide();
+	var editor = ace.edit("markdownSource");
+	var textarea = $('textarea[name="markdownSource"]').hide();
 	editor.getSession().setValue(textarea.val());
 	editor.getSession().on('change', function(){
 	  textarea.val(editor.getSession().getValue());
@@ -42,8 +42,8 @@ window.onload = function() {
 <form action="/admin/updatePost" method="post">
 <p>Title:</p>
 <input type="text" name="title" class="input-md" value="${post.title }" style="margin-bottom:5px;width:100%"/>
-<textarea name="editorContent">${post.content }</textarea>
-<div id="editorContent"></div>
+<textarea name="markdownSource">${post.parsedHtmlContent }</textarea>
+<div id="markdownSource"></div>
 
 <input type="hidden" name="postId" value="${post.id}"/>
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

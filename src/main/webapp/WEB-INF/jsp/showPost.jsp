@@ -20,10 +20,12 @@
 <h2>Seniror's Blog</h2>
 </a>
 </div>
-<pre>
-${post.content}
-</pre>
-</div>
+<h2>${post.title }</h2>
 
+${post.parsedHtmlContent}
+</div>
+<div id="footer" class="text-center">
+&copy; 2016 Seniror (Yang Sheng)
+</div>
 </body>
 </html>
