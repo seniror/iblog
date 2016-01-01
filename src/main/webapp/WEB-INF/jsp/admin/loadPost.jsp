@@ -42,6 +42,8 @@ window.onload = function() {
 <form action="/admin/updatePost" method="post">
 <p>Title:</p>
 <input type="text" name="title" class="input-md" value="${post.title }" style="margin-bottom:5px;width:100%"/>
+<p>Permanent Link:</p>
+<input type="text" name="permLink" class="input-md" style="margin-bottom:5px;width:100%"/>
 <textarea name="markdownSource">${post.parsedHtmlContent }</textarea>
 <div id="markdownSource"></div>
 

@@ -44,7 +44,7 @@ function deletePost(postId) {
 		<div>
 		<a href="${postUrl}" class="thumbnail">
 		<h2>${post.title}</h2>
-		<span>${post.updatedTime }</span>
+		<span>${post.createdTime }</span>
 		</a>
 		</div>
 	</c:forEach>

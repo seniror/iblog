@@ -42,7 +42,7 @@ public class AdminController {
 			pageIndex = DEFAULT_PAGE_INDEX;
 		}
 		
-		PageRequest pageRequest = new PageRequest(pageIndex, PAGE_SIZE, Sort.Direction.DESC, "updatedTime");
+		PageRequest pageRequest = new PageRequest(pageIndex, PAGE_SIZE, Sort.Direction.DESC, "createdTime");
 		Page<Post> paginationPosts = postRepository.findAll(pageRequest);
 		model.put("paginationPosts", paginationPosts);
 	    return "admin/index";
@@ -63,7 +63,8 @@ public class AdminController {
 	    			.title(title)
 	    			.markdownSource(markdownSource)
 	    			.htmlContent(parsedHtmlContent)
-	    			.creator(user));
+	    			.creator(user)
+	    			.permLink(permLink));
 	    model.put("post", post);
 	    return "redirect:/admin/index";
 	}
@@ -81,11 +82,12 @@ public class AdminController {
 	}	
 	
 	@RequestMapping("/updatePost")
-	public String updatePost(String title, String editorContent, Integer postId, Map<String, Object> model) {
+	public String updatePost(String title, String editorContent, String permLink, Integer postId, Map<String, Object> model) {
 		
 	    Post post = postRepository.findOne(postId);
-	    post.setMarkdownSource(editorContent);
-	    post.setTitle(title);
+	    post.markdownSource(editorContent)
+	    	.title(title)
+	    	.permLink(permLink);
 	    postRepository.save(post);
 	    model.put("post", post);
 	    return "redirect:/admin/index";

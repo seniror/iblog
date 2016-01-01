@@ -44,12 +44,16 @@ window.onload = function() {
 <form action="/admin/createPost" method="post" id="form1">
 <p>Title:</p>
 <input type="text" name="title" class="input-md" style="margin-bottom:5px;width:100%"/>
+<p>Permanent Link:</p>
 <input type="text" name="permLink" class="input-md" style="margin-bottom:5px;width:100%"/>
 <textarea name="markdownSource"></textarea>
 <div id="markdownSource"></div>
 
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 <input type="submit" class="btn btn-primary btn-block" style="width:100%;margin-top:5px"> 
+<br/>
+<a href="/admin/index" role="button" class="btn btn-default btn-block">Cancel</a>
+</form>
 </form>
 </div>
 </body>
