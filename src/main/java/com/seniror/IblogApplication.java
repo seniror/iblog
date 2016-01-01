@@ -34,13 +34,75 @@ public class IblogApplication extends SpringBootServletInitializer {
 			Calendar twoYearBefore = Calendar.getInstance();
 			twoYearBefore.set(Calendar.YEAR, twoYearBefore.get(Calendar.YEAR) - 2);
 			
-			postRepository.save(new Post("title 1", "content 1", admin, twoYearBefore.getTime()));
-			postRepository.save(new Post("title 2", "content 2", admin, twoYearBefore.getTime()));
-			postRepository.save(new Post("title 3", "content 3", admin, oneYearBefore.getTime()));
-			postRepository.save(new Post("title 4", "content 4", admin, oneYearBefore.getTime()));
-			postRepository.save(new Post("title 5", "content 5", "content 5", admin));
-			postRepository.save(new Post("title 6", "content 6", "content 6", admin));
-			postRepository.save(new Post("title 7", "content 7", "content 7", admin));
+			Calendar today = Calendar.getInstance();
+			
+			postRepository.save(new Post()
+									.title("title 1")
+									.markdownSource("content 1")
+									.htmlContent("content")
+									.creator(admin)
+									.permLink("title1")
+									.createdTime(twoYearBefore.getTime())
+									);
+			
+			twoYearBefore.set(Calendar.DAY_OF_YEAR, twoYearBefore.get(Calendar.DAY_OF_YEAR) - 7);
+			postRepository.save(new Post()
+					.title("title 2")
+					.markdownSource("content 2")
+					.htmlContent("content")
+					.creator(admin)
+					.permLink("title2")
+					.createdTime(twoYearBefore.getTime())
+					);			
+			
+			postRepository.save(new Post()
+					.title("title 3")
+					.markdownSource("content 3")
+					.htmlContent("content")
+					.creator(admin)
+					.permLink("title3")
+					.createdTime(oneYearBefore.getTime())
+					);
+			
+			oneYearBefore.set(Calendar.DAY_OF_YEAR, oneYearBefore.get(Calendar.DAY_OF_YEAR) - 7);
+			postRepository.save(new Post()
+					.title("title 4")
+					.markdownSource("content 4")
+					.htmlContent("content")
+					.creator(admin)
+					.permLink("title4")
+					.createdTime(oneYearBefore.getTime())
+					);			
+			
+			postRepository.save(new Post()
+					.title("title 5")
+					.markdownSource("content 5")
+					.htmlContent("content")
+					.creator(admin)
+					.permLink("title5")
+					.createdTime(today.getTime())
+					);
+			
+			today.set(Calendar.DAY_OF_YEAR, today.get(Calendar.DAY_OF_YEAR) - 100);
+			postRepository.save(new Post()
+					.title("title 6")
+					.markdownSource("content 6")
+					.htmlContent("content")
+					.creator(admin)
+					.permLink("title6")
+					.createdTime(today.getTime())
+					);
+			
+			today.set(Calendar.DAY_OF_YEAR, today.get(Calendar.DAY_OF_YEAR) - 50);
+			postRepository.save(new Post()
+					.title("title 7")
+					.markdownSource("content 7")
+					.htmlContent("content")
+					.creator(admin)
+					.permLink("title7")
+					.createdTime(today.getTime())
+					);
+			
 		};
 	}
 

@@ -1,6 +1,5 @@
 package com.seniror.iblog.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -41,12 +40,14 @@ public class WelcomeController {
 	
 	@RequestMapping("/archives")
 	public String archives(Map<String, Object> model) {
-		Map<Integer, List<Post>> groupByYearPosts = new HashMap<>();
 		List<Post> posts = postRepository.findAll();
-		groupByYearPosts = posts.stream()
-				.collect(Collectors.groupingBy(Post::getCreatedYear));
+		// sort inner collection
+		Map<Integer, List<Post>> groupByYearPosts = 
+				posts.stream().sorted().collect(Collectors.groupingBy(Post::getCreatedYear));
+		// sort key
 		Map<Integer, List<Post>> sortedByKey = new TreeMap<>(new PostYearDescComparator());
 		sortedByKey.putAll(groupByYearPosts);
+		
 		model.put("postsGroupByKey", sortedByKey);
 		return "archives";
 	}	

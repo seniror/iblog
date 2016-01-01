@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Post {
+public class Post implements java.lang.Comparable<Post>{
 
 	@Id
 	@GeneratedValue
@@ -23,35 +23,52 @@ public class Post {
 	private Date createdTime;
 	private Date updatedTime;
 	
-	public Post() {
-	}
+	private String permLink;
 	
-	public Post(String title, String markdownSource, String htmlContent, User creator) {
-		this.title = title;
-		this.markdownSource = markdownSource;
-		this.parsedHtmlContent = htmlContent;
-		this.creator = creator;
+	public Post() {
 		this.createdTime = new Date();
 		this.createdYear = calCreatedYear();
 		this.updatedTime = new Date();
 	}
 	
+	// Builder Constructor
+	public Post markdownSource(String markdownSource) {
+		this.markdownSource = markdownSource;
+		return this;
+	}
+	
+	public Post title(String title) {
+		this.title = title;
+		return this;
+	}
+	
+	public Post htmlContent(String htmlContent) {
+		this.parsedHtmlContent = htmlContent;
+		return this;
+	}
+	
+	public Post creator(User creator) {
+		this.creator = creator;
+		return this;
+	}	
+	
+	public Post permLink(String permLink) {
+		this.permLink = permLink;
+		return this;
+	}		
+	
+	// this builder method should only be used for local test
+	public Post createdTime(Date createdTime) {
+		this.createdTime = createdTime;
+		this.createdYear = calCreatedYear();
+		return this;
+	}
+	// Builder Constructor end
+	
 	private Integer calCreatedYear() {
 		Calendar now = Calendar.getInstance();
 		now.setTime(this.createdTime);
 		return now.get(Calendar.YEAR);
-	}
-	
-	/*
-	 * For Test only
-	 */
-	public Post(String title, String content, User user, Date createdTime) {
-		this.title = title;
-		this.markdownSource = content;
-		this.creator = user;
-		this.createdTime = createdTime;
-		this.createdYear = calCreatedYear();
-		this.updatedTime = new Date();
 	}
 	
 	public Integer getId() {
@@ -102,8 +119,20 @@ public class Post {
 	public void setParsedHtmlContent(String parsedHtmlContent) {
 		this.parsedHtmlContent = parsedHtmlContent;
 	}
+	public String getPermLink() {
+		return permLink;
+	}
+	public void setPermLink(String permLink) {
+		this.permLink = permLink;
+	}
 	@Override
 	public String toString() {
 		return "Post [title=" + title + "]";
+	}
+
+	@Override
+	public int compareTo(Post other) {
+		// desc
+		return other.createdTime.compareTo(this.createdTime);
 	}
 }

@@ -54,11 +54,16 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/createPost")
-	public String createPost(String title, String markdownSource, Map<String, Object> model) {
+	public String createPost(String title, String markdownSource, String permLink, Map<String, Object> model) {
 		String name = getLoginUsername();
 	    User user = userRepository.findUserByLoginName(name);
 	    String parsedHtmlContent = markdownService.toHtml(markdownSource);
-	    Post post = postRepository.save(new Post(title, markdownSource, parsedHtmlContent, user));
+	    Post post = postRepository.save(
+	    		new Post()
+	    			.title(title)
+	    			.markdownSource(markdownSource)
+	    			.htmlContent(parsedHtmlContent)
+	    			.creator(user));
 	    model.put("post", post);
 	    return "redirect:/admin/index";
 	}

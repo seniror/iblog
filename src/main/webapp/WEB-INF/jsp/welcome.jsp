@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html lang="en">
 <head>
@@ -26,14 +27,11 @@
 </div>
 <h2>Latest Posts</h2>
 <c:forEach var="post" items="${posts}">
-	<c:url value="/post/findPostById" var="postUrl">
-	   <c:param name="id" value="${post.id}"/>
-	</c:url>
-		<div>
-	<a href="<c:out value="${postUrl}" />" class="thumbnail">
-	<h2>${post.title}</h2>
-	<span><c:out value="${post.createdTime }"/></span>
-	</a>
+	<div>
+		<a href="/post/${post.permLink }" class="thumbnail">
+		<h2>${post.title}</h2>
+		<small><fmt:formatDate pattern="yyyy-MM-dd" value="${post.createdTime}" /></small>	  
+		</a>
 	</div>
 </c:forEach>
 <div id="archives" class="text-center">
@@ -41,7 +39,7 @@
 </div>
 <br/>
 <div id="footer" class="text-center">
-&copy; 2016 Seniror (Yang Sheng)
+&copy; Seniror (Yang Sheng)
 </div>
 <br/>
 </div>

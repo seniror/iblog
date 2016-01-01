@@ -28,13 +28,10 @@
 <h1>${oneYearPosts.key}</h1>
 <hr/>
 		<c:forEach var="post" items="${oneYearPosts.value}">
-			<c:url value="/post/findPostById" var="postUrl">
-			   <c:param name="id" value="${post.id}"/>
-			</c:url>
 				<div>
-				<a href="<c:out value="${postUrl}" />">
+				<a href="/post/${post.permLink }">
 				<h4>${post.title}</h4>
-				<small><fmt:formatDate pattern="yyyy-MM-dd" value="${post.updatedTime}" /></small>	                         
+				<small><fmt:formatDate pattern="yyyy-MM-dd" value="${post.createdTime}" /></small>	                         
 
 				</a>
 			</div>

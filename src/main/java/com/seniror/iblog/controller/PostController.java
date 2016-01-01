@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.seniror.iblog.dao.PostRepository;
@@ -21,4 +22,9 @@ public class PostController {
 		return "showPost";
 	}
 
+	@RequestMapping(path="/{permLink}")
+	public String findPostByPermLink(@PathVariable String permLink, Map<String, Object> model) {
+		model.put("post", postRepository.findPostByPermLink(permLink));
+		return "showPost";
+	}
 }

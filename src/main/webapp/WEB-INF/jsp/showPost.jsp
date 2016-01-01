@@ -25,7 +25,7 @@
 ${post.parsedHtmlContent}
 </div>
 <div id="footer" class="text-center">
-&copy; 2016 Seniror (Yang Sheng)
+&copy; Seniror (Yang Sheng)
 </div>
 </body>
 </html>

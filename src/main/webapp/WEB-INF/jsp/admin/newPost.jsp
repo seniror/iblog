@@ -44,6 +44,7 @@ window.onload = function() {
 <form action="/admin/createPost" method="post" id="form1">
 <p>Title:</p>
 <input type="text" name="title" class="input-md" style="margin-bottom:5px;width:100%"/>
+<input type="text" name="permLink" class="input-md" style="margin-bottom:5px;width:100%"/>
 <textarea name="markdownSource"></textarea>
 <div id="markdownSource"></div>
 

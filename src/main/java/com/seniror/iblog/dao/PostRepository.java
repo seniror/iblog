@@ -8,4 +8,5 @@ import com.seniror.iblog.domain.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer>{
 
+	public Post findPostByPermLink(String permLink);
 }
