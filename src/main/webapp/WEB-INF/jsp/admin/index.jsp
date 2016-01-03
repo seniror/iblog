@@ -21,6 +21,10 @@ function deletePost(postId) {
 		}
 	});
 }
+
+function showPost(permLink) {
+			window.location="/post/"+permLink;	
+}
 </script>
 </head>
 
@@ -34,34 +38,47 @@ function deletePost(postId) {
 	
 	Welcome back, ${loginUsername } <a href="/logout">Log out</a>
 	<h3><a href="/admin/newPost">New Post</a></h3>
-	<h2 class="text-center">All Posts (Page ${paginationPosts.number + 1 } out of ${paginationPosts.totalPages })</h2>
+	
+	<c:if test="${paginationPosts.totalPages > 0}">
+		<h2 class="text-center">All Posts (Page ${paginationPosts.number + 1 } out of ${paginationPosts.totalPages })</h2>
+	</c:if>
 	
 	<c:forEach var="post" items="${paginationPosts.content}">
 		<c:url value="/admin/loadPost" var="postUrl">
 		   <c:param name="id" value="${post.id}"/>
 		</c:url>
 		<button type="button" class="btn btn-danger" onclick="deletePost(this.value)" value="${post.id }">Delete Post</button>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<button type="button" class="btn btn-info" onclick="showPost(this.value)" value="${post.permLink }">Preview Post</button>
 		<div>
 		<a href="${postUrl}" class="thumbnail">
-		<h2>${post.title}</h2>
-		<span>${post.createdTime }</span>
+			<h2>
+			<c:if test="${!post.published }">
+				DRAFT---
+			</c:if>
+			${post.title}
+			</h2>
+			<span>${post.createdTime }</span>
+		
 		</a>
 		</div>
 	</c:forEach>
-	<div class="text-right">
-	<ul class="pagination">
-		<c:forEach var="i" begin="0" end="${paginationPosts.totalPages - 1 }" step="1">
-			<c:choose>
-				<c:when test="${i == paginationPosts.number}">
-					<li class="active"><a href="/admin/index?pageIndex=${i }">${i + 1 }</a></li>			
-				</c:when>
-				<c:otherwise>
-					<li><a href="/admin/index?pageIndex=${i }">${i + 1 }</a></li>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach>
-	</ul>
-	</div>
+	<c:if test="${paginationPosts.totalPages > 0}">
+		<div class="text-right">
+		<ul class="pagination">
+			<c:forEach var="i" begin="0" end="${paginationPosts.totalPages - 1 }" step="1">
+				<c:choose>
+					<c:when test="${i == paginationPosts.number}">
+						<li class="active"><a href="/admin/index?pageIndex=${i }">${i + 1 }</a></li>			
+					</c:when>
+					<c:otherwise>
+						<li><a href="/admin/index?pageIndex=${i }">${i + 1 }</a></li>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+		</ul>
+		</div>
+	</c:if>
 </div>
 
 </body>

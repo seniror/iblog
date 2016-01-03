@@ -3,6 +3,7 @@ package com.seniror.iblog.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,17 +31,22 @@ public class WelcomeController {
 	@Autowired
 	private PostRepository postRepository;
 	
+	private static java.util.concurrent.atomic.AtomicLong counter = new AtomicLong();
+	
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model) {
+		
+		System.out.println(counter.getAndIncrement());
+		
 		PageRequest pageRequest = new PageRequest(DEFAULT_PAGE_INDEX, PAGE_SIZE, Sort.Direction.DESC, "createdTime");
-		Page<Post> posts = postRepository.findAll(pageRequest);
+		Page<Post> posts = postRepository.findByPublishedTrue(pageRequest);
 		model.put("posts", posts.getContent());
 		return "welcome";
 	}
 	
 	@RequestMapping("/archives")
 	public String archives(Map<String, Object> model) {
-		List<Post> posts = postRepository.findAll();
+		List<Post> posts = postRepository.findByPublishedTrue();
 		// sort inner collection
 		Map<Integer, List<Post>> groupByYearPosts = 
 				posts.stream().sorted().collect(Collectors.groupingBy(Post::getCreatedYear));

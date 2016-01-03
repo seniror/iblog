@@ -17,34 +17,11 @@ import com.seniror.iblog.service.UserService;
 @Configuration
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @EnableWebSecurity
-@Profile("production")
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new StandardPasswordEncoder();
-	}
-    
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .eraseCredentials(true)
-            .userDetailsService(userService())
-            .passwordEncoder(passwordEncoder());
-    }
-    
-    @Bean
-    public UserService userService() {
-        return new UserService();
-    }
+@Profile("default")
+public class WebSecurityConfigDev extends WebSecurityConfigurerAdapter{
     
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-            .authorizeRequests()
-            .antMatchers("/", "/js/**", "/archives", "/post/**").permitAll()
-            .antMatchers("/admin/**").hasRole("ADMIN")
-            .anyRequest().authenticated().and()
-            .formLogin();
+		httpSecurity.authorizeRequests().anyRequest().permitAll();
 	}
 }

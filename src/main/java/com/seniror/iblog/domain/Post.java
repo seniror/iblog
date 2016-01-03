@@ -3,26 +3,35 @@ package com.seniror.iblog.domain;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
 
 @Entity
+@Table(name="T_POST")
 public class Post implements java.lang.Comparable<Post>{
 
 	@Id
 	@GeneratedValue
 	private Integer id;
 	private String title;
+	@Type(type="text")
 	private String markdownSource;
+	@Type(type="text")
 	private String parsedHtmlContent;
+	private boolean published = false;
+	
 	@ManyToOne
 	private User creator;
 	private Integer createdYear;
 	private Date createdTime;
 	private Date updatedTime;
-	
+	@Column(unique=true)
 	private String permLink;
 	
 	public Post() {
@@ -32,7 +41,7 @@ public class Post implements java.lang.Comparable<Post>{
 	}
 	
 	// Builder Constructor
-	public Post markdownSource(String markdownSource) {
+	public Post sourceContent(String markdownSource) {
 		this.markdownSource = markdownSource;
 		return this;
 	}
@@ -56,6 +65,11 @@ public class Post implements java.lang.Comparable<Post>{
 		this.permLink = permLink;
 		return this;
 	}		
+	
+	public Post published(boolean published) {
+		this.published = published;
+		return this;
+	}			
 	
 	// this builder method should only be used for local test
 	public Post createdTime(Date createdTime) {
@@ -128,6 +142,12 @@ public class Post implements java.lang.Comparable<Post>{
 	@Override
 	public String toString() {
 		return "Post [title=" + title + "]";
+	}
+	public boolean isPublished() {
+		return published;
+	}
+	public void setPublished(boolean published) {
+		this.published = published;
 	}
 
 	@Override

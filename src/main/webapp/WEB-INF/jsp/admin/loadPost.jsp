@@ -38,18 +38,33 @@ window.onload = function() {
 <h2>Seniror's Blog</h2>
 </a>
 </div>
-
+<c:if test="${not empty error}">
+<span class="text-danger">${error }</span>
+</c:if>
 <form action="/admin/updatePost" method="post">
 <p>Title:</p>
 <input type="text" name="title" class="input-md" value="${post.title }" style="margin-bottom:5px;width:100%"/>
 <p>Permanent Link:</p>
-<input type="text" name="permLink" class="input-md" style="margin-bottom:5px;width:100%"/>
-<textarea name="markdownSource">${post.parsedHtmlContent }</textarea>
+<input type="text" name="permLink" class="input-md" value="${post.permLink }" style="margin-bottom:5px;width:100%"/>
+<textarea name="markdownSource">${post.markdownSource }</textarea>
 <div id="markdownSource"></div>
 
 <input type="hidden" name="postId" value="${post.id}"/>
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 <br/>
+<div id="publish">Publish this post: 
+<c:choose>
+	<c:when test="${post.published }">
+		<label class="radio-inline"><input type="radio" name="publish" value="true" checked>YES</label>
+		<label class="radio-inline"><input type="radio" name="publish" value="false">NO</label>	
+	</c:when>
+	<c:otherwise>
+		<label class="radio-inline"><input type="radio" name="publish" value="true">YES</label>
+		<label class="radio-inline"><input type="radio" name="publish" value="false" checked>NO</label>
+	</c:otherwise>
+</c:choose>
+</div>
+
 <input type="submit" class="btn btn-primary btn-block" style="width:100%;margin-top:5px">	
 <br/>
 <a href="/admin/index" role="button" class="btn btn-default btn-block">Cancel</a>

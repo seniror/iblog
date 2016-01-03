@@ -1,13 +1,12 @@
 package com.seniror.iblog.domain;
 
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="T_USER")
 public class User {
 
 	public enum UserRole {
@@ -19,8 +18,6 @@ public class User {
 	private Long id;
 	private String loginName;
 	private String password;
-	@OneToMany
-	private Set<Post> posts;
 	private UserRole role;
 	
 	public Long getId() {
@@ -40,12 +37,6 @@ public class User {
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	public Set<Post> getPosts() {
-		return posts;
-	}
-	public void setPosts(Set<Post> posts) {
-		this.posts = posts;
 	}
 	public UserRole getRole() {
 		return role;

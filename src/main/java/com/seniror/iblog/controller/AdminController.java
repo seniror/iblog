@@ -54,17 +54,34 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/createPost")
-	public String createPost(String title, String markdownSource, String permLink, Map<String, Object> model) {
+	public String createPost(String title, String markdownSource, String permLink, boolean publish, Map<String, Object> model) {
+		// check the existance of permenant link
+		Post post = postRepository.findPostByPermLink(permLink);
+		
+		if(post != null) {
+			
+			Post postNew = new Post();
+			postNew
+				.title(title)
+				.sourceContent(markdownSource)
+				.permLink(permLink)
+				.published(publish);
+			model.put("error", "Found Duplicate Permanent Link");
+			model.put("post", postNew);	
+			return "forward:/admin/newPost";
+		}
+		
 		String name = getLoginUsername();
 	    User user = userRepository.findUserByLoginName(name);
 	    String parsedHtmlContent = markdownService.toHtml(markdownSource);
-	    Post post = postRepository.save(
+	    post = postRepository.save(
 	    		new Post()
 	    			.title(title)
-	    			.markdownSource(markdownSource)
+	    			.sourceContent(markdownSource)
 	    			.htmlContent(parsedHtmlContent)
 	    			.creator(user)
-	    			.permLink(permLink));
+	    			.permLink(permLink)
+	    			.published(publish));
 	    model.put("post", post);
 	    return "redirect:/admin/index";
 	}
@@ -82,12 +99,33 @@ public class AdminController {
 	}	
 	
 	@RequestMapping("/updatePost")
-	public String updatePost(String title, String editorContent, String permLink, Integer postId, Map<String, Object> model) {
+	public String updatePost(String title, String markdownSource, String permLink, Integer postId, boolean publish, Map<String, Object> model) {
 		
-	    Post post = postRepository.findOne(postId);
-	    post.markdownSource(editorContent)
+		// check the existance of permenant link
+		Post post = postRepository.findPostByPermLink(permLink);
+		
+		if(post != null && post.getId() != postId) {
+				
+			post
+				.title(title)
+				.sourceContent(markdownSource)
+				.permLink(permLink)
+				.published(publish)
+				.setId(postId);
+			model.put("error", "Found Duplicate Permanent Link");
+			model.put("post", post);
+			return "admin/loadPost";
+		}
+		
+	    post = postRepository.findOne(postId);
+	    
+	    String parsedHtmlContent = markdownService.toHtml(markdownSource);
+	    
+	    post.sourceContent(markdownSource)
+	    	.htmlContent(parsedHtmlContent)
 	    	.title(title)
-	    	.permLink(permLink);
+	    	.permLink(permLink)
+	    	.published(publish);
 	    postRepository.save(post);
 	    model.put("post", post);
 	    return "redirect:/admin/index";
